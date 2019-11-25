@@ -42,6 +42,7 @@ namespace FrontSystemWine
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<EditarPreferenciaService>();
+            services.AddScoped<UsuarioNotaVinhoService>();
             services.AddScoped<TestService>();
         }
 

@@ -5,14 +5,40 @@
 
 <button @onclick="@LogUsername">@id</button>
 
-@if  (vinho != null)
-{
-    <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+<div class="container">
 
-    </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-}
+    <div class="row flex-row">
 
 
+
+        @if (vinho != null)
+        {
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+        }
+
+    </div>
+</div>
 @code {
     string id;
     VinhoListagem vinho = null;

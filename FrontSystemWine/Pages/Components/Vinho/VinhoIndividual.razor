@@ -1,39 +1,107 @@
 ﻿@using FrontSystemWine.DTOS
+@using FrontSystemWine.Models
+@using FrontSystemWine.Services
+@using Microsoft.AspNetCore.Components.Authorization
 
-<div class="col-lg-4 mb-5 col-md-6">
-    <div class="wine_v_1 text-center pb-4">
-        <a href="shop-single.html" class="thumbnail d-block mb-4"><img src="images/wine_1.png" alt="Image" class="img-fluid"></a>
-        <h3 class="heading mb-1"><a href="#">@vinho.Descricao @nota_a</a></h3>
-    </div>
-    <span class="Uva"><b>Uva:</b> @vinho.TipoUva</span>
-    <span class="price"><b>Valor:</b> R$ @vinho.Valor</span>
-    <div class="rate">
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inherits OwningComponentBase<UsuarioNotaVinhoService>
 
-        <input type="radio" id="star@(vinho.Id)_5" name="rate@(vinho.Id)" value="5" />
-        <label for="star@(vinho.Id)_5" @onclick="@(() => Votar(5))" title="5">nota</label>
 
-        <input type="radio" id="star@(vinho.Id)_4" name="rate@(vinho.Id)" value="4" />
-        <label for="star@(vinho.Id)_4" @onclick="@(() => Votar(4))" title="4">nota</label>
+<div class="card" style="max-width: 540px;">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="images/wine_1.png" class="card-img" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@vinho.Descricao</h5>
+                <p class="card-text">
+                    <strong>Tipo do vinho:</strong><br />
+                    @vinho.TipoUva
+                </p>
+                <p class="card-text">
+                    <strong>Tipo da uva:</strong><br />
+                    @vinho.TipoUva
+                </p>
+                <p class="card-text">
+                    <strong>Preço:</strong><br />
+                    R$ @vinho.Valor
+                </p>
+                <p class="card-text">
+                    <div class="rate d-flex flex-row">
+                        <input type="radio" checked="@AddChecked(5.0)" id="star@(vinho.Id)_5" name="rate@(vinho.Id)" value="5" />
+                        <label for="star@(vinho.Id)_5" @onclick="@(() => Votar(5))" title="5">nota</label>
 
-        <input type="radio" id="star@(vinho.Id)_3" name="rate@(vinho.Id)" value="3" />
-        <label for="star@(vinho.Id)_3" @onclick="@(() => Votar(3))" title="3">nota</label>
+                        <input type="radio" checked="@AddChecked(4.0)" id="star@(vinho.Id)_4" name="rate@(vinho.Id)" value="4" />
+                        <label for="star@(vinho.Id)_4" @onclick="@(() => Votar(4))" title="4">nota</label>
 
-        <input type="radio" id="star@(vinho.Id)_2" name="rate@(vinho.Id)" value="2" />
-        <label for="star@(vinho.Id)_2" @onclick="@(() => Votar(2))" title="2">nota</label>
+                        <input type="radio" checked="@AddChecked(3.0)" id="star@(vinho.Id)_3" name="rate@(vinho.Id)" value="3" />
+                        <label for="star@(vinho.Id)_3" @onclick="@(() => Votar(3))" title="3">nota</label>
 
-        <input type="radio" id="star@(vinho.Id)_1" name="rate@(vinho.Id)" value="1" />
-        <label for="star@(vinho.Id)_1" @onclick="@(() => Votar(1))" title="1">nota</label>
+                        <input type="radio" checked="@AddChecked(2.0)" id="star@(vinho.Id)_2" name="rate@(vinho.Id)" value="2" />
+                        <label for="star@(vinho.Id)_2" @onclick="@(() => Votar(2))" title="2">nota</label>
 
+                        <input type="radio" checked="@AddChecked(1.0)" id="star@(vinho.Id)_1" name="rate@(vinho.Id)" value="1" />
+                        <label for="star@(vinho.Id)_1" @onclick="@(() => Votar(1))" title="1">nota</label>
+                    </div>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
+@*<div class="col-lg-4 mb-5 col-md-6">
+        <div class="wine_v_1 text-center pb-4">
+            <a href="shop-single.html" class="thumbnail d-block mb-4"><img src="images/wine_1.png" alt="Image" class="img-fluid"></a>
+            <h3 class="heading mb-1"><a href="#">@vinho.Descricao </a></h3>
+        </div>
+        <span class="Uva"><b>Uva:</b> @vinho.TipoUva</span>
+        <span class="price"><b>Valor:</b> R$ @vinho.Valor</span>
+
+    </div>*@
+
 @code {
-    double nota_a = 0;
     [Parameter]
     public VinhoListagem vinho { get; set; }
 
+    UsuarioNotaVinho notaUsuario = null;
+
+    protected override void OnInitialized()
+    {
+        notaUsuario = Service.GetUsuarioNotaVinho(userId(), vinho.Id);
+        if (notaUsuario == null)
+        {
+            notaUsuario = new UsuarioNotaVinho()
+            {
+                IdUsuario = userId(),
+                IdVinho = vinho.Id,
+                Nota = 0.0
+            };
+        }
+        base.OnInitialized();
+    }
+
     void Votar(double nota)
     {
-        nota_a = nota;
+        notaUsuario.Nota = nota;
+        Service.AtualizarVoto(notaUsuario);
+    }
+
+    bool AddChecked(double nota)
+    {
+        return (notaUsuario.Nota == nota);
+    }
+
+    private string userId()
+    {
+        var authState = AuthenticationStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            return user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+        }
+
+        return "";
     }
 }
