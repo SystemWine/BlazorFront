@@ -7,29 +7,39 @@
 
 @inherits OwningComponentBase<EditarPreferenciaService>
 
-<h1>Editar minhas preferências</h1>
+<section>
+    <div class="container">
 
-<h3>Tipo de vinho</h3>
-<select @onchange="TipoVinhoChanged" class="form-control">
-    @foreach (var tipoVinho in listaTiposVinho)
-    {
-        <option value="@tipoVinho.Id"
-            selected="@(tipoVinho.Id == preferencia.IdTipoVinho)">
-            @tipoVinho.Descricao
-        </option>
-    }
-</select>
+        <div class="row">
+            <h1>Editar minhas preferências</h1>
 
-<h3>Tipo de uva</h3>
-<select @onchange="TipoUvaChanged" class="form-control">
-    @foreach (var tipoUva in listaTiposUva)
-    {
-        <option value="@tipoUva.Id"
-            selected="@(tipoUva.Id == preferencia.IdTipoUva)">
-            @tipoUva.Descricao
-        </option>
-    }
-</select>
+            <h3>Tipo de vinho</h3>
+            <select @onchange="TipoVinhoChanged" class="form-control">
+                @foreach (var tipoVinho in listaTiposVinho)
+                {
+                    <option value="@tipoVinho.Id"
+                            selected="@(tipoVinho.Id == preferencia.IdTipoVinho)">
+                        @tipoVinho.Descricao
+                    </option>
+                }
+            </select>
+
+            <h3>Tipo de uva</h3>
+            <select @onchange="TipoUvaChanged" class="form-control">
+                @foreach (var tipoUva in listaTiposUva)
+                {
+                    <option value="@tipoUva.Id"
+                            selected="@(tipoUva.Id == preferencia.IdTipoUva)">
+                        @tipoUva.Descricao
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+
+</section>
+
+
 
 @code {
 
