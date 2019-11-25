@@ -1,0 +1,41 @@
+﻿@page "/test"
+@using Microsoft.AspNetCore.Components.Authorization
+@using FrontSystemWine.DTOS
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<button @onclick="@LogUsername">@id</button>
+
+@if  (vinho != null)
+{
+    <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+
+    </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+}
+
+
+@code {
+    string id;
+    VinhoListagem vinho = null;
+    private async Task LogUsername()
+    {
+        vinho = new VinhoListagem()
+        {
+            Id = 1,
+            Descricao = "Melhor vinho de todos",
+            Valor = 100,
+            TipoUva = "Uva rocha"
+        };
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            id = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            Console.WriteLine($"{user.Identity.Name} is authenticated.");
+        }
+        else
+        {
+            Console.WriteLine("The user is NOT authenticated.");
+        }
+    }
+}

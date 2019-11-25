@@ -1,0 +1,27 @@
+﻿<ul class="nav navbar-nav">
+
+    <AuthorizeView>
+        <Authorized>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vinhos  <i class="fa fa-angle-down"></i></a>
+                <ul class="dropdown-menu">
+                    <li><a asp-controller="Tipos" asp-action="Index">Tipos</a></li>
+                    <li><a href="#">Ocasião</a></li>
+                    <li><a href="#">Uvas</a></li>
+                    <li><a href="#">Países</a></li>
+                    <li><a href="#">Região</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Recomendações</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/editarpreferencias">Minhas preferências</a>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+    <LoginDisplay />
+</ul>
+@code {
+
+}
