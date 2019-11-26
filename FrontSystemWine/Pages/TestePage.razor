@@ -1,67 +1,31 @@
 ﻿@page "/test"
 @using Microsoft.AspNetCore.Components.Authorization
-@using FrontSystemWine.DTOS
+@using FrontSystemWine.Models
+@using FrontSystemWine.Services
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<button @onclick="@LogUsername">@id</button>
-
-<div class="container">
-
-    <div class="row flex-row">
+@inherits OwningComponentBase<VinhoService>
 
 
-
-        @if (vinho != null)
+    @if (vinhos != null)
         {
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
-            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            <div class="row">
+
+                @foreach (var vinho in vinhos)
+                {
+                    <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho">
+                    </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+                }
+            </div>
+
         }
 
-    </div>
-</div>
 @code {
-    string id;
-    VinhoListagem vinho = null;
-    private async Task LogUsername()
-    {
-        vinho = new VinhoListagem()
-        {
-            Id = 1,
-            Descricao = "Melhor vinho de todos",
-            Valor = 100,
-            TipoUva = "Uva rocha"
-        };
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
-        {
-            id = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-            Console.WriteLine($"{user.Identity.Name} is authenticated.");
-        }
-        else
-        {
-            Console.WriteLine("The user is NOT authenticated.");
-        }
+    List<Vinho> vinhos;
+    protected override void OnInitialized()
+    {
+        vinhos = Service.GetVinhos();
+        base.OnInitialized();
     }
 }

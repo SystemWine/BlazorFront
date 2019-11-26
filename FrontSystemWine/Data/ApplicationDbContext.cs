@@ -20,5 +20,6 @@ namespace FrontSystemWine.Data
         public DbSet<TipoVinho> TiposVinho { get; set; }
         public DbSet<UsuarioPreferencia> UsuarioPreferencias { get; set; }
         public DbSet<UsuarioNotaVinho> UsuarioNotaVinhos { get; set; }
+        public DbSet<Vinho> Vinhos { get; set; }
     }
 }

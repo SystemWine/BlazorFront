@@ -1,0 +1,251 @@
+﻿@page  "/admin/vinhos"
+@using BlazorInputFile
+@using System.IO
+@using FrontSystemWine.Models
+@using FrontSystemWine.Services
+
+@inherits OwningComponentBase<VinhoService>
+
+<h1>Listagem de vinhos cadastrados</h1>
+<div class="container border p-3">
+    <div class="row">
+        <div class="col-3">
+            <button class="btn btn-info" @onclick="AddVinho">
+                Criar novo
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Descricao</th>
+                    <th>Preço</th>
+                    <th>Tipo do vinho</th>
+                    <th>Tipo da uva</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in vinhos)
+                    {
+
+                        <tr>
+                            <td>@obj.Descricao</td>
+                            <td>@obj.Valor</td>
+                            <td>@obj.TipoVinho.Descricao</td>
+                            <td>@obj.TipoUva.Descricao</td>
+                            <td>
+                                <button class="btn btn-primary" style="width:150px" @onclick="(() => EditarVinho(obj))">
+                                    Editar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (Cadastrando)
+{
+    <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        <EditForm Model="@VinhoCadastro" OnValidSubmit="@ValidSubmit">
+
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" @onclick="FechaForm">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                        <h3 class="text-info">@(VinhoCadastro.Id == 0 ? "Cadastrar" : "Atualizar") Vinho</h3>
+                    </div>
+                    <div class="modal-body">
+                        <DataAnnotationsValidator></DataAnnotationsValidator>
+                        <ValidationSummary></ValidationSummary>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Descricao">Descrição</label>
+                                <InputText class="form-control" @bind-Value="VinhoCadastro.Descricao"></InputText>
+                                <ValidationMessage For="@(() => VinhoCadastro.Descricao)"></ValidationMessage>
+                            </div>
+                            <div class="form-group">
+                                <label for="descricao">Tipo do vinho</label>
+                                <select @onchange="TipoVinhoSelectChanged" class="form-control">
+                                    @foreach (var tipoVinho in tiposVinho)
+                                    {
+                                        <option value="@tipoVinho.Id"
+                                                selected="@(tipoVinho.Id == VinhoCadastro.IdTipoVinho)">
+                                            @tipoVinho.Descricao
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="descricao">Tipo da uva</label>
+                                <select @onchange="TipoUvaSelectChanged" class="form-control">
+                                    @foreach (var tipoUva in tiposUva)
+                                    {
+                                        <option value="@tipoUva.Id"
+                                                selected="@(tipoUva.Id == VinhoCadastro.IdTipoUva)">
+                                            @tipoUva.Descricao
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Valor">Valor</label>
+                                <InputNumber class="form-control" @bind-Value="VinhoCadastro.Valor"></InputNumber>
+                                <ValidationMessage For="@(() => VinhoCadastro.Valor)"></ValidationMessage>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-3">
+                                    <img src="@convertImageToDisplay(VinhoCadastro.Imagem)" width="100%" />
+                                </div>
+                                <div>
+                                    <InputFile OnChange="HandleSelection"></InputFile>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            @if (VinhoCadastro.Id > 0)
+                            {
+                                <button class="btn btn-primary"
+                                        @onclick="Deletar"
+                                        type="submit">
+                                    Excluir
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+}
+
+
+@code {
+    bool Cadastrando = false;
+    List<Vinho> vinhos;
+    Vinho VinhoCadastro;
+    List<TipoUva> tiposUva;
+    List<TipoVinho> tiposVinho;
+    public byte[] ImageUploaded { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        vinhos = Service.GetVinhos();
+    }
+
+    void CarregarListas()
+    {
+        tiposUva = Service.GetTiposUva();
+        tiposVinho = Service.GetTiposVinho();
+    }
+
+    void FechaForm()
+    {
+        Cadastrando = false;
+    }
+
+    void EditarVinho(Vinho vinho)
+    {
+        VinhoCadastro = vinho;
+        CarregarListas();
+        Cadastrando = true;
+    }
+
+    void Deletar()
+    {
+        Cadastrando = false;
+        Service.DeletarVinho(VinhoCadastro);
+        vinhos.Clear();
+        vinhos = Service.GetVinhos();
+    }
+
+    void AddVinho()
+    {
+        VinhoCadastro = new Vinho();
+        VinhoCadastro.Id = 0;
+        CarregarListas();
+        if (tiposUva.Count > 0)
+        {
+            VinhoCadastro.IdTipoUva = tiposUva[0].Id;
+        }
+        if (tiposVinho.Count > 0)
+        {
+            VinhoCadastro.IdTipoVinho = tiposVinho[0].Id;
+        }
+        Cadastrando = true;
+    }
+
+    void TipoVinhoSelectChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            VinhoCadastro.IdTipoVinho = id;
+        }
+    }
+
+    void TipoUvaSelectChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            VinhoCadastro.IdTipoUva = id;
+        }
+    }
+
+    void ValidSubmit()
+    {
+        var result = false;
+        Cadastrando = false;
+
+        if (ImageUploaded != null)
+        {
+            VinhoCadastro.Imagem = ImageUploaded;
+            ImageUploaded = null;
+        }
+
+        if (VinhoCadastro.Id > 0)
+        {
+            result = Service.AtualizarVinho(VinhoCadastro);
+        }
+        else
+        {
+            result = Service.CriarVinho(VinhoCadastro);
+        }
+
+        vinhos = Service.GetVinhos();
+    }
+
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+        if (file != null)
+        {
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+
+            ImageUploaded = ms.ToArray();
+        }
+    }
+
+    string convertImageToDisplay(byte[] image)
+    {
+        if (image != null)
+        {
+            var base64 = Convert.ToBase64String(image);
+            var finalStr = string.Format("data:image/jpg;base64,{0}", base64);
+
+            return finalStr;
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+
+}

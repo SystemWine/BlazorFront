@@ -43,6 +43,7 @@ namespace FrontSystemWine
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<EditarPreferenciaService>();
             services.AddScoped<UsuarioNotaVinhoService>();
+            services.AddScoped<VinhoService>();
             services.AddScoped<TestService>();
         }
 
