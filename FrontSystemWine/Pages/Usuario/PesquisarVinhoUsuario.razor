@@ -1,0 +1,91 @@
+﻿@page "/vinhos/pesquisar"
+@using FrontSystemWine.Models
+@using FrontSystemWine.Services
+@using FrontSystemWine.DTOS
+
+@inherits OwningComponentBase<VinhoService>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#filtros" role="button" aria-expanded="false" aria-controls="filtros">
+                    Filtros
+                </a>
+            </p>
+            <div class="collapse" id="filtros">
+            <div class="form-group">
+                <label for="">Tipo de vinho</label>
+                <select @onchange="TipoVinhoChanged" class="form-control">
+                    @foreach (var tipoVinho in listaTiposVinho)
+                    {
+                        <option value="@tipoVinho.Id"
+                                selected="@(tipoVinho.Id == pesquisa.IdTipoVinho)">
+                            @tipoVinho.Descricao
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Tipo de uva</label>
+                <select @onchange="TipoUvaChanged" class="form-control">
+                    @foreach (var tipoUva in listaTiposUva)
+                    {
+                        <option value="@tipoUva.Id"
+                                selected="@(tipoUva.Id == pesquisa.IdTipoVinho)">
+                            @tipoUva.Descricao
+                        </option>
+                    }
+                </select>
+            </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@code {
+    /*
+     * Sessão de váriaveis
+     */
+
+    AtributosPesquisaVinho pesquisa = new AtributosPesquisaVinho() { Id = 0, IdTipoUva = 0, IdTipoVinho = 0};
+
+    List<TipoVinho> listaTiposVinho;
+    List<TipoUva> listaTiposUva;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        CarregarCombos();
+    }
+
+    void TipoVinhoChanged()
+    {
+
+    }
+
+    void TipoUvaChanged()
+    {
+
+    }
+
+    void CarregarCombos()
+    {
+        /*
+         * Tipos de vinho
+         */
+        listaTiposVinho = Service.GetTiposVinho();
+        var todosVinho = new TipoVinho();
+        todosVinho.Id = 0;
+        todosVinho.Descricao = "(todos)";
+
+        listaTiposVinho.Insert(0, todosVinho);
+
+        listaTiposUva = Service.GetTiposUva();
+        var todosUva = new TipoUva();
+        todosUva.Id = 0;
+        todosUva.Descricao = "(todos)";
+        listaTiposUva.Insert(0, todosUva);
+    }
+}
