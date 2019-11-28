@@ -28,9 +28,11 @@
                 <label for="star@(vinho.Id)_1" @onclick="@(() => Votar(1))" title="1">nota</label>
             </div>
         </p>
-        <div class="caption">
-            <h3>@vinho.Descricao</h3>
-        </div>
+        <br />
+        <p>
+            <br />
+            <strong>@vinho.Descricao</strong>
+        </p>
         <p>
             <strong>Tipo do vinho:</strong><br />
             @vinho.TipoVinho.Descricao
