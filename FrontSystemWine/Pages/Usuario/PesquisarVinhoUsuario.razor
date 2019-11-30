@@ -5,51 +5,66 @@
 
 @inherits OwningComponentBase<VinhoService>
 
-<section>
-    <div class="container">
-        <div class="row">
-            <p>
-                <a class="btn btn-primary" data-toggle="collapse" href="#filtros" role="button" aria-expanded="false" aria-controls="filtros">
-                    Filtros
-                </a>
-            </p>
-            <div class="collapse" id="filtros">
-            <div class="form-group">
-                <label for="">Tipo de vinho</label>
-                <select @onchange="TipoVinhoChanged" class="form-control">
-                    @foreach (var tipoVinho in listaTiposVinho)
-                    {
-                        <option value="@tipoVinho.Id"
-                                selected="@(tipoVinho.Id == pesquisa.IdTipoVinho)">
-                            @tipoVinho.Descricao
-                        </option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="">Tipo de uva</label>
-                <select @onchange="TipoUvaChanged" class="form-control">
-                    @foreach (var tipoUva in listaTiposUva)
-                    {
-                        <option value="@tipoUva.Id"
-                                selected="@(tipoUva.Id == pesquisa.IdTipoVinho)">
-                            @tipoUva.Descricao
-                        </option>
-                    }
-                </select>
-            </div>
-            </div>
+<div class="row">
+    <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#filtros" role="button" aria-expanded="false" aria-controls="filtros">
+            Filtros
+        </a>
+    </p>
+    <div class="collapse" id="filtros">
+        <div class="form-group">
+            <label for="">Tipo de vinho</label>
+            <select @onchange="TipoVinhoChanged" class="form-control">
+                @foreach (var tipoVinho in listaTiposVinho)
+                {
+                    <option value="@tipoVinho.Id"
+                            selected="@(tipoVinho.Id == pesquisa.IdTipoVinho)">
+                        @tipoVinho.Descricao
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="">Tipo de uva</label>
+            <select @onchange="TipoUvaChanged" class="form-control">
+                @foreach (var tipoUva in listaTiposUva)
+                {
+                    <option value="@tipoUva.Id"
+                            selected="@(tipoUva.Id == pesquisa.IdTipoVinho)">
+                        @tipoUva.Descricao
+                    </option>
+                }
+            </select>
         </div>
     </div>
+</div>
 
-</section>
+<div class="row">
+    @if (listaVinhos != null)
+    {
+        <div class="row">
 
+            @foreach (var vinho in listaVinhos)
+            {
+                <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
+                </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            }
+            @if (listaVinhos.Count == 0)
+            {
+                <h3>Não há resultados para a combinação de filtros...</h3>
+            }
+        </div>
+
+    }
+</div>
 @code {
     /*
      * Sessão de váriaveis
      */
 
-    AtributosPesquisaVinho pesquisa = new AtributosPesquisaVinho() { Id = 0, IdTipoUva = 0, IdTipoVinho = 0};
+    AtributosPesquisaVinho pesquisa = new AtributosPesquisaVinho() { Id = 0, IdTipoUva = 0, IdTipoVinho = 0, IdPais = 0, IdRegiao = 0 };
+
+    List<Vinho> listaVinhos;
 
     List<TipoVinho> listaTiposVinho;
     List<TipoUva> listaTiposUva;
@@ -58,16 +73,25 @@
     {
         base.OnInitialized();
         CarregarCombos();
+        listaVinhos = Service.GetVinhosComFiltro(pesquisa);
     }
 
-    void TipoVinhoChanged()
+    void TipoVinhoChanged(ChangeEventArgs e)
     {
-
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            pesquisa.IdTipoVinho = id;
+            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+        }
     }
 
-    void TipoUvaChanged()
+    void TipoUvaChanged(ChangeEventArgs e)
     {
-
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            pesquisa.IdTipoUva = id;
+            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+        }
     }
 
     void CarregarCombos()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using FrontSystemWine.DTOS;
 
 namespace FrontSystemWine.Services
 {
@@ -42,6 +43,16 @@ namespace FrontSystemWine.Services
             _db.Vinhos.Add(vinho);
             _db.SaveChanges();
             return true;
+        }
+
+        public List<Vinho> GetVinhosComFiltro(AtributosPesquisaVinho filtros)
+        {
+            return _db.Vinhos
+                .Where(x => x.IdTipoUva == filtros.IdTipoUva || filtros.IdTipoUva == 0)
+                .Where(x => x.IdTipoVinho == filtros.IdTipoVinho || filtros.IdTipoVinho == 0)
+                //.Where(x => x. == filtros.IdPais || filtros.IdPais == 0)
+                .Where(x => x.IdRegiao == filtros.IdRegiao || filtros.IdRegiao == 0)
+                .ToList();
         }
 
         public bool AtualizarVinho(Vinho vinho)

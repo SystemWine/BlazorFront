@@ -10,24 +10,27 @@
 <div class="col-sm-2 col-md-2">
     <div class="thumbnail">
         <img src="@convertImageToDisplay(vinho.Imagem)" alt="...">
-        <p>
-            <div class="rate">
-                <input type="radio" checked="@AddChecked(5.0)" id="star@(vinho.Id)_5" name="rate@(vinho.Id)" value="5" />
-                <label for="star@(vinho.Id)_5" @onclick="@(() => Votar(5))" title="5">nota</label>
+        @if (permiteVoto)
+        {
+            <p>
+                <div class="rate">
+                    <input type="radio" checked="@AddChecked(5.0)" id="star@(vinho.Id)_5" name="rate@(vinho.Id)" value="5" />
+                    <label for="star@(vinho.Id)_5" @onclick="@(() => Votar(5))" title="5">nota</label>
 
-                <input type="radio" checked="@AddChecked(4.0)" id="star@(vinho.Id)_4" name="rate@(vinho.Id)" value="4" />
-                <label for="star@(vinho.Id)_4" @onclick="@(() => Votar(4))" title="4">nota</label>
+                    <input type="radio" checked="@AddChecked(4.0)" id="star@(vinho.Id)_4" name="rate@(vinho.Id)" value="4" />
+                    <label for="star@(vinho.Id)_4" @onclick="@(() => Votar(4))" title="4">nota</label>
 
-                <input type="radio" checked="@AddChecked(3.0)" id="star@(vinho.Id)_3" name="rate@(vinho.Id)" value="3" />
-                <label for="star@(vinho.Id)_3" @onclick="@(() => Votar(3))" title="3">nota</label>
+                    <input type="radio" checked="@AddChecked(3.0)" id="star@(vinho.Id)_3" name="rate@(vinho.Id)" value="3" />
+                    <label for="star@(vinho.Id)_3" @onclick="@(() => Votar(3))" title="3">nota</label>
 
-                <input type="radio" checked="@AddChecked(2.0)" id="star@(vinho.Id)_2" name="rate@(vinho.Id)" value="2" />
-                <label for="star@(vinho.Id)_2" @onclick="@(() => Votar(2))" title="2">nota</label>
+                    <input type="radio" checked="@AddChecked(2.0)" id="star@(vinho.Id)_2" name="rate@(vinho.Id)" value="2" />
+                    <label for="star@(vinho.Id)_2" @onclick="@(() => Votar(2))" title="2">nota</label>
 
-                <input type="radio" checked="@AddChecked(1.0)" id="star@(vinho.Id)_1" name="rate@(vinho.Id)" value="1" />
-                <label for="star@(vinho.Id)_1" @onclick="@(() => Votar(1))" title="1">nota</label>
-            </div>
-        </p>
+                    <input type="radio" checked="@AddChecked(1.0)" id="star@(vinho.Id)_1" name="rate@(vinho.Id)" value="1" />
+                    <label for="star@(vinho.Id)_1" @onclick="@(() => Votar(1))" title="1">nota</label>
+                </div>
+            </p>
+        }
         <br />
         <p>
             <br />
@@ -100,6 +103,9 @@
 @code {
     [Parameter]
     public Vinho vinho { get; set; }
+
+    [Parameter]
+    public bool permiteVoto { get; set; }
 
     UsuarioNotaVinho notaUsuario = null;
 
