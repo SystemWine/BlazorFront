@@ -44,6 +44,7 @@ namespace FrontSystemWine
             services.AddScoped<EditarPreferenciaService>();
             services.AddScoped<UsuarioNotaVinhoService>();
             services.AddScoped<VinhoService>();
+            services.AddScoped<APIRecomendacaoService>();
             services.AddScoped<TestService>();
         }
 

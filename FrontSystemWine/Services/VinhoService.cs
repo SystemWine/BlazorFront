@@ -23,8 +23,13 @@ namespace FrontSystemWine.Services
             return _db.Vinhos
                 .Include(v => v.TipoUva)
                 .Include(v => v.TipoVinho)
-                //.Include(v => v.Regiao)
+                .Include(v => v.Regiao)
                 .ToList();
+        }
+
+        public List<Pais> GetPaises()
+        {
+            return _db.Paises.ToList();
         }
 
         public List<TipoUva> GetTiposUva()
@@ -37,9 +42,13 @@ namespace FrontSystemWine.Services
             return _db.TiposVinho.ToList();
         }
 
+        public List<Regiao> GetRegioes()
+        {
+            return _db.Regioes.ToList();
+        }
+
         public bool CriarVinho(Vinho vinho)
         {
-            vinho.IdRegiao = 1;
             _db.Vinhos.Add(vinho);
             _db.SaveChanges();
             return true;
@@ -52,6 +61,7 @@ namespace FrontSystemWine.Services
                 .Where(x => x.IdTipoVinho == filtros.IdTipoVinho || filtros.IdTipoVinho == 0)
                 //.Where(x => x. == filtros.IdPais || filtros.IdPais == 0)
                 .Where(x => x.IdRegiao == filtros.IdRegiao || filtros.IdRegiao == 0)
+                .Where(x => x.Regiao.Pais.Id == filtros.IdPais || filtros.IdPais == 0)
                 .ToList();
         }
 

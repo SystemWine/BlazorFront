@@ -36,27 +36,52 @@
                 }
             </select>
         </div>
+        <div class="form-group">
+            <label for="">País</label>
+            <select @onchange="PaisChanged" class="form-control">
+                @foreach (var pais in listaPaises)
+                {
+                    <option value="@pais.Id"
+                            selected="@(pais.Id == pesquisa.IdPais)">
+                        @pais.Descricao
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="">Região</label>
+            <select @onchange="RegiaoChanged" class="form-control">
+                @foreach (var regiao in listaRegioes)
+                {
+                <option value="@regiao.Id"
+                        selected="@(regiao.Id == pesquisa.IdRegiao)">
+                    @NomeRegiao(regiao)
+                </option>
+                }
+            </select>
+        </div>
     </div>
 </div>
 
-<div class="row">
-    @if (listaVinhos != null)
-    {
-        <div class="row">
+@if (listaVinhos != null)
+{
+    <div class="row">
 
-            @foreach (var vinho in listaVinhos)
-            {
-                <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
-                </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-            }
-            @if (listaVinhos.Count == 0)
-            {
-                <h3>Não há resultados para a combinação de filtros...</h3>
-            }
-        </div>
+        @foreach (var vinho in listaVinhos)
+        {
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+        }
+        @if (listaVinhos.Count == 0)
+        {
+            <div class="alert alert-primary" role="alert">
+                Não há resultados para a sua <strong>combinação de filtros</strong>...
+            </div>
+        }
+    </div>
 
-    }
-</div>
+}
+
 @code {
     /*
      * Sessão de váriaveis
@@ -68,12 +93,32 @@
 
     List<TipoVinho> listaTiposVinho;
     List<TipoUva> listaTiposUva;
+    List<Pais> listaPaises;
+    List<Regiao> listaRegioes;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         CarregarCombos();
         listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+    }
+
+    void RegiaoChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            pesquisa.IdRegiao = id;
+            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+        }
+    }
+
+    void PaisChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            pesquisa.IdPais = id;
+            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+        }
     }
 
     void TipoVinhoChanged(ChangeEventArgs e)
@@ -94,6 +139,11 @@
         }
     }
 
+    string NomeRegiao(Regiao regiao)
+    {
+        return regiao.Id == 0 ? regiao.Descricao : $"{regiao.Pais.Descricao} - {regiao.Descricao}";
+    }
+
     void CarregarCombos()
     {
         /*
@@ -111,5 +161,17 @@
         todosUva.Id = 0;
         todosUva.Descricao = "(todos)";
         listaTiposUva.Insert(0, todosUva);
+
+        listaRegioes = Service.GetRegioes();
+        var todasRegioes = new Regiao();
+        todasRegioes.Id = 0;
+        todasRegioes.Descricao = "(todas)";
+        listaRegioes.Insert(0, todasRegioes);
+
+        listaPaises = Service.GetPaises();
+        var todosPaises = new Pais();
+        todosPaises.Id = 0;
+        todosPaises.Descricao = "(todos)";
+        listaPaises.Insert(0, todosPaises);
     }
 }

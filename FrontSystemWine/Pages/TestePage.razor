@@ -4,10 +4,11 @@
 @using FrontSystemWine.Services
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@inherits OwningComponentBase<VinhoService>
+@inherits OwningComponentBase<APIRecomendacaoService>
 
 
-    @if (vinhos != null)
+<h1>@teste</h1>
+    @*@if (vinhos != null)
         {
             <div class="row">
 
@@ -18,14 +19,16 @@
                 }
             </div>
 
-        }
+        }*@
 
 @code {
 
     List<Vinho> vinhos;
+    string teste = "";
     protected override void OnInitialized()
     {
-        vinhos = Service.GetVinhos();
+        teste = Service.ProcessarTestes().id_vinho.ToString();
+        //vinhos = Service.GetVinhos();
         base.OnInitialized();
     }
 }
