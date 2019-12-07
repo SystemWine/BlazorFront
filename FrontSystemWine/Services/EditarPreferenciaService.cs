@@ -35,6 +35,7 @@ namespace FrontSystemWine.Services
         {
             if (preferencia.Id == 0)
             {
+                preferencia.MostrarBoasVindas = true;
                 _db.UsuarioPreferencias.Add(preferencia);
             }            
             else

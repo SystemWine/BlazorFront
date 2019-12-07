@@ -1,5 +1,9 @@
 ﻿@page "/"
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using FrontSystemWine.Services
+@using FrontSystemWine.Models
+@inherits OwningComponentBase<EditarPreferenciaService>
 <section id="main-slider" class="no-margin">
     <div class="carousel slide">
         <ol class="carousel-indicators">
@@ -65,3 +69,88 @@
         <i class="fa fa-chevron-right"></i>
     </a>
 </section>
+
+
+<AuthorizeView>
+    <Authorized>
+        @if (MostrarBoasVindas)
+        {
+            <div class="modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" @onclick="FechaForm">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                            <h1 class="text-info">
+                                Bem vindo ao System Wine!
+                            </h1>
+                        </div>
+                        <div class="modal-body">
+                            <h3>
+                                1- Acesse o botão <a href="/editarpreferencias">“Preferências”</a> e cadastre as opções oferecidas de acordo com os seus gostos.
+                                Com isso, o System Wine poderá lhe oferecer sugestões de vinhos que poderão te surpreender.
+                            </h3>
+
+                            <h3>
+                                2- Acesse o botão “Recomendações” e avalie os vinhos de acordo com as suas expectativas e/ou experiências.
+                                O System Wine irá te oferecer novas recomendações de vinhos que podem de fato te interessar.
+                            </h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-info" @onclick="Atualizar">
+                                Não mostrar mais
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code{
+    UsuarioPreferencia preferencia = null;
+    bool MostrarBoasVindas = true;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        preferencia = Service.GetRegistroPreferenciaUsuario(userId());
+        if (preferencia == null)
+        {
+            preferencia = new UsuarioPreferencia();
+            preferencia.Id = 0;
+            preferencia.IdUsuario = userId();
+            preferencia.MostrarBoasVindas = true;
+        }
+        MostrarBoasVindas = preferencia.MostrarBoasVindas;
+    }
+
+    void FechaForm()
+    {
+        MostrarBoasVindas = false;
+    }
+
+    void Atualizar()
+    {
+        preferencia.MostrarBoasVindas = false;
+        Service.AtualizarPreferencias(preferencia);
+        MostrarBoasVindas = preferencia.MostrarBoasVindas;
+    }
+
+    private string userId()
+    {
+        var authState = AuthenticationStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            return user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+        }
+
+        return "";
+    }
+}

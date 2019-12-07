@@ -11,5 +11,6 @@ namespace FrontSystemWine.Models
         public string IdUsuario { get; set; }
         public int IdTipoUva { get; set; }
         public int IdTipoVinho { get; set; }
+        public bool MostrarBoasVindas { get; set; }
     }
 }
