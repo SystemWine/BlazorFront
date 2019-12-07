@@ -34,7 +34,7 @@
         <br />
         <p>
             <br />
-            <strong>@vinho.Descricao</strong>
+            <strong>@vinho.Id  @vinho.Descricao</strong>
         </p>
         <p>
             <strong>Tipo do vinho:</strong><br />
@@ -101,8 +101,28 @@
     </div>*@
 
 @code {
+
+    private Vinho _vinho;
+
     [Parameter]
-    public Vinho vinho { get; set; }
+    public Vinho vinho
+    {
+        get => _vinho;
+        set
+        {
+            _vinho = value;
+            notaUsuario = Service.GetUsuarioNotaVinho(userId(), value.Id);
+            if (notaUsuario == null)
+            {
+                notaUsuario = new UsuarioNotaVinho()
+                {
+                    IdUsuario = userId(),
+                    IdVinho = vinho.Id,
+                    Nota = 0.0
+                };
+            }
+        }
+    }
 
     [Parameter]
     public bool permiteVoto { get; set; }
@@ -122,6 +142,12 @@
             };
         }
         base.OnInitialized();
+    }
+
+    void setterVinho(Vinho value)
+    {
+        this.vinho = value;
+        notaUsuario = Service.GetUsuarioNotaVinho(userId(), vinho.Id);
     }
 
     void Votar(double nota)

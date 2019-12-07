@@ -30,7 +30,7 @@
                 @foreach (var tipoUva in listaTiposUva)
                 {
                     <option value="@tipoUva.Id"
-                            selected="@(tipoUva.Id == pesquisa.IdTipoVinho)">
+                            selected="@(tipoUva.Id == pesquisa.IdTipoUva)">
                         @tipoUva.Descricao
                     </option>
                 }
@@ -65,7 +65,7 @@
 
 @if (listaVinhos != null)
 {
-    <div class="row">
+    <div class="content">
 
         @foreach (var vinho in listaVinhos)
         {
@@ -100,7 +100,7 @@
     {
         base.OnInitialized();
         CarregarCombos();
-        listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+        AtualizarListaVinhos();
     }
 
     void RegiaoChanged(ChangeEventArgs e)
@@ -108,7 +108,7 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             pesquisa.IdRegiao = id;
-            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+            AtualizarListaVinhos();
         }
     }
 
@@ -117,7 +117,7 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             pesquisa.IdPais = id;
-            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+            AtualizarListaVinhos();
         }
     }
 
@@ -126,7 +126,7 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             pesquisa.IdTipoVinho = id;
-            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+            AtualizarListaVinhos();
         }
     }
 
@@ -135,8 +135,18 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             pesquisa.IdTipoUva = id;
-            listaVinhos = Service.GetVinhosComFiltro(pesquisa);
+            AtualizarListaVinhos();
         }
+    }
+
+    void AtualizarListaVinhos()
+    {
+        if (listaVinhos != null)
+        {
+            listaVinhos.Clear();
+        }
+        
+        listaVinhos = Service.GetVinhosComFiltro(pesquisa);
     }
 
     string NomeRegiao(Regiao regiao)
