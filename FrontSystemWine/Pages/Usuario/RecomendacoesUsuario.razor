@@ -6,23 +6,45 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @inherits OwningComponentBase<APIRecomendacaoService>
-<h1>Vinhos recomendados</h1>
+    <div class="row">
+        <h1>Vinhos recomendados com base nos seus votos</h1>
 
-@foreach (var vinho in listaVinhos)
-{
-    <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
-    </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
-}
-@if (listaVinhos.Count == 0)
-{
-    <div class="alert alert-primary" role="alert">
-        Não há resultados para a sua <strong>combinação de filtros</strong>...
+        @foreach (var vinho in listaVinhos)
+        {
+            <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
+            </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+        }
+        @if (listaVinhos.Count == 0)
+        {
+            <div class="alert alert-primary" role="alert">
+                Nenhum resultado encontrado. Você já votou nos seus <a href="/vinhos/pesquisar"><strong>vinhos?</strong></a>
+            </div>
+        }
     </div>
-}
+
+    <div class="row">
+        <h1>Vinhos recomendados com base nas suas <a href="/editarpreferencias">preferências</a></h1>
+        @if (ListaVinhosPreferencias != null)
+        {
+            @foreach (var vinho in ListaVinhosPreferencias)
+            {
+                <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
+                </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+            }
+        }
+
+        @if ((ListaVinhosPreferencias == null) || (ListaVinhosPreferencias.Count == 0))
+        {
+            <div class="alert alert-primary" role="alert">
+                Nenhum resultado encontrado. Você já definiu <a href="/editarpreferencias"><strong>suas preferências?</strong></a>
+            </div>
+        }
+    </div>
 
 @code {
 
     List<Vinho> listaVinhos = null;
+    List<Vinho> ListaVinhosPreferencias = null;
 
     protected override void OnInitialized()
     {
@@ -33,16 +55,16 @@
     void CarregarVinhos()
     {
         if (listaVinhos != null) listaVinhos.Clear();
+        if (ListaVinhosPreferencias != null) ListaVinhosPreferencias.Clear();
         listaVinhos = new List<Vinho>();
+        ListaVinhosPreferencias = Service.GetVinhosComBaseNasPreferencias(userId());
 
         var listaVinhosRecomendados = Service.ObterVinhosRecomendadosPorUsuario(userId());
 
         foreach (var vinhoRec in listaVinhosRecomendados)
         {
             listaVinhos.Add(Service.GetInstanciaVinho(vinhoRec.id_vinho));
-        }
-
-
+        }        
     }
 
 

@@ -3,39 +3,47 @@
 @using FrontSystemWine.Services
 
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inherits OwningComponentBase<EditarPreferenciaService>
 
 <section>
     <div class="container">
+        <form>
+            <div class="row">
+                <h1>Editar minhas preferências</h1>
 
-        <div class="row">
-            <h1>Editar minhas preferências</h1>
+                <h3>Tipo de vinho</h3>
+                <select @onchange="TipoVinhoChanged" class="form-control">
+                    @foreach (var tipoVinho in listaTiposVinho)
+                    {
+                        <option value="@tipoVinho.Id"
+                                selected="@(tipoVinho.Id == preferencia.IdTipoVinho)">
+                            @tipoVinho.Descricao
+                        </option>
+                    }
+                </select>
 
-            <h3>Tipo de vinho</h3>
-            <select @onchange="TipoVinhoChanged" class="form-control">
-                @foreach (var tipoVinho in listaTiposVinho)
-                {
-                    <option value="@tipoVinho.Id"
-                            selected="@(tipoVinho.Id == preferencia.IdTipoVinho)">
-                        @tipoVinho.Descricao
-                    </option>
-                }
-            </select>
-
-            <h3>Tipo de uva</h3>
-            <select @onchange="TipoUvaChanged" class="form-control">
-                @foreach (var tipoUva in listaTiposUva)
-                {
-                    <option value="@tipoUva.Id"
-                            selected="@(tipoUva.Id == preferencia.IdTipoUva)">
-                        @tipoUva.Descricao
-                    </option>
-                }
-            </select>
+                <h3>Tipo de uva</h3>
+                <select @onchange="TipoUvaChanged" class="form-control">
+                    @foreach (var tipoUva in listaTiposUva)
+                    {
+                        <option value="@tipoUva.Id"
+                                selected="@(tipoUva.Id == preferencia.IdTipoUva)">
+                            @tipoUva.Descricao
+                        </option>
+                    }
+                </select>
+            </div>
+            <br />
+            <br />
+        </form>
+        <div class="form-group">
+            <button class="btn btn-success form-control" @onclick="GravarAlteracoes">Salvar</button>
         </div>
     </div>
+
 
 </section>
 
@@ -61,12 +69,17 @@
         }
     }
 
+    void GravarAlteracoes()
+    {
+        Service.AtualizarPreferencias(preferencia);
+        NavigationManager.NavigateTo("/usuario/recomendacoes");
+    }
+
     void TipoVinhoChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             preferencia.IdTipoVinho = id;
-            Service.AtualizarPreferencias(preferencia);
         }
     }
 
@@ -75,7 +88,6 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             preferencia.IdTipoUva = id;
-            Service.AtualizarPreferencias(preferencia);
         }
     }
 

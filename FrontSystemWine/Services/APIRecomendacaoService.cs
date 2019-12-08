@@ -33,6 +33,22 @@ namespace FrontSystemWine.Services
 
             return retorno;
         }
+        
+        public List<Vinho> GetVinhosComBaseNasPreferencias(string idUsuario)
+        {
+            var preferencias = _db.UsuarioPreferencias.Where(x => x.IdUsuario == idUsuario).FirstOrDefault();
+            
+            if (preferencias != null)
+            {
+                return _db.Vinhos.Where(x => x.IdTipoUva == preferencias.IdTipoUva || x.IdTipoVinho == preferencias.IdTipoVinho)
+                    .Include(v => v.TipoUva)
+                    .Include(v => v.TipoVinho)
+                    .Include(v => v.Regiao)
+                    .ToList();
+            }
+
+            return null;
+        }
 
         public Vinho GetInstanciaVinho(int idVinho)
         {
