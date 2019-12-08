@@ -1,0 +1,62 @@
+﻿@page "/usuario/recomendacoes"
+@using FrontSystemWine.Services
+@using FrontSystemWine.Models
+
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inherits OwningComponentBase<APIRecomendacaoService>
+<h1>Vinhos recomendados</h1>
+
+@foreach (var vinho in listaVinhos)
+{
+    <FrontSystemWine.Pages.Components.Vinho.VinhoIndividual vinho="vinho" permiteVoto="true">
+    </FrontSystemWine.Pages.Components.Vinho.VinhoIndividual>
+}
+@if (listaVinhos.Count == 0)
+{
+    <div class="alert alert-primary" role="alert">
+        Não há resultados para a sua <strong>combinação de filtros</strong>...
+    </div>
+}
+
+@code {
+
+    List<Vinho> listaVinhos = null;
+
+    protected override void OnInitialized()
+    {
+        CarregarVinhos();
+        base.OnInitialized();
+    }
+
+    void CarregarVinhos()
+    {
+        if (listaVinhos != null) listaVinhos.Clear();
+        listaVinhos = new List<Vinho>();
+
+        var listaVinhosRecomendados = Service.ObterVinhosRecomendadosPorUsuario(userId());
+
+        foreach (var vinhoRec in listaVinhosRecomendados)
+        {
+            listaVinhos.Add(Service.GetInstanciaVinho(vinhoRec.id_vinho));
+        }
+
+
+    }
+
+
+    private string userId()
+    {
+        var authState = AuthenticationStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            return user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+        }
+
+        return "";
+    }
+
+}

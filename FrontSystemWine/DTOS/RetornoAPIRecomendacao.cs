@@ -7,7 +7,7 @@ namespace FrontSystemWine.DTOS
 {
     public class RetornoAPIRecomendacao
     {
-        public int id_usuario { get; set; }
+        public double sug_nota { get; set; }
         public int id_vinho { get; set; }
     }
 }
