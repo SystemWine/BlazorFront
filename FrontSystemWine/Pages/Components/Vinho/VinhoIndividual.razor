@@ -12,7 +12,7 @@
         <img src="@convertImageToDisplay(vinho.Imagem)" alt="...">
         @if (permiteVoto)
         {
-            <p>
+            <p style="font-size:small">
                 <div class="rate">
                     <input type="radio" checked="@AddChecked(5.0)" id="star@(vinho.Id)_5" name="rate@(vinho.Id)" value="5" />
                     <label for="star@(vinho.Id)_5" @onclick="@(() => Votar(5))" title="5">nota</label>
@@ -34,11 +34,7 @@
         <br />
         <p>
             <br />
-            <strong>@vinho.Descricao</strong>
-        </p>
-        <p>
-            <strong>Tipo do vinho:</strong><br />
-            @vinho.TipoVinho.Descricao
+            <strong>@vinho.Descricao || @vinho.TipoVinho.Descricao</strong>
         </p>
         <p>
             <strong>Tipo da uva:</strong><br />
@@ -48,8 +44,8 @@
             <strong>Preço:</strong><br />
             R$ @vinho.Valor
         </p>
-        <p>
-            <strong>Armoniza com:</strong><br />
+        <p style="font-size:small">
+            <strong>Armoniza com: </strong>
                 @if (vinho.Armonizacao != null)
                 {@vinho.Armonizacao.Descricao}
     </p>
