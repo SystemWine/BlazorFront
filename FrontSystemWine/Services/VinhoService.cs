@@ -37,6 +37,11 @@ namespace FrontSystemWine.Services
             return _db.TiposUva.ToList();
         }
 
+        public List<Armonizacao> GetArmonizacoes()
+        {
+            return _db.Armonizacoes.ToList();
+        }
+
         public List<TipoVinho> GetTiposVinho()
         {
             return _db.TiposVinho.ToList();
@@ -61,6 +66,7 @@ namespace FrontSystemWine.Services
                 .Where(x => x.IdTipoVinho == filtros.IdTipoVinho || filtros.IdTipoVinho == 0)
                 //.Where(x => x. == filtros.IdPais || filtros.IdPais == 0)
                 .Where(x => x.IdRegiao == filtros.IdRegiao || filtros.IdRegiao == 0)
+                .Where(x => x.IdArmonizacao == filtros.IdArmonizacao || filtros.IdArmonizacao == 0 && x.IdArmonizacao != 0)
                 .Where(x => x.Regiao.Pais.Id == filtros.IdPais || filtros.IdPais == 0)
                 .ToList();
         }

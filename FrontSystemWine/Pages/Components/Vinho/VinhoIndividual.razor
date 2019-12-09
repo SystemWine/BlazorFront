@@ -34,7 +34,7 @@
         <br />
         <p>
             <br />
-            <strong>@vinho.Id  @vinho.Descricao</strong>
+            <strong>@vinho.Descricao</strong>
         </p>
         <p>
             <strong>Tipo do vinho:</strong><br />
@@ -48,8 +48,12 @@
             <strong>Preço:</strong><br />
             R$ @vinho.Valor
         </p>
-
-    </div>
+        <p>
+            <strong>Armoniza com:</strong><br />
+                @if (vinho.Armonizacao != null)
+                {@vinho.Armonizacao.Descricao}
+    </p>
+</div>
 </div>
 
 

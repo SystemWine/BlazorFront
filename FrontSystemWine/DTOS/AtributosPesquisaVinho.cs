@@ -18,5 +18,7 @@ namespace FrontSystemWine.DTOS
         public int IdPais { get; set; }
 
         public int IdRegiao { get; set; }
+
+        public int IdArmonizacao { get; set; }
     }
 }

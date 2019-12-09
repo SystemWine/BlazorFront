@@ -44,6 +44,7 @@ namespace FrontSystemWine.Services
                     .Include(v => v.TipoUva)
                     .Include(v => v.TipoVinho)
                     .Include(v => v.Regiao)
+                    .Include(v => v.Armonizacao)
                     .ToList();
             }
 
@@ -56,6 +57,7 @@ namespace FrontSystemWine.Services
                 .Include(v => v.TipoUva)
                 .Include(v => v.TipoVinho)
                 .Include(v => v.Regiao)
+                .Include(v => v.Armonizacao)
                 .FirstOrDefault();
         }
 

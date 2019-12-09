@@ -108,6 +108,18 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="descricao">Armoniza com</label>
+                                <select @onchange="ArmonizacaoSelectChanged" class="form-control">
+                                    @foreach (var armonizacao in armonizacoes)
+                                    {
+                                        <option value="@armonizacao.Id"
+                                                selected="@(armonizacao.Id == VinhoCadastro.IdArmonizacao)">
+                                            @armonizacao.Descricao
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="Valor">Valor</label>
                                 <InputNumber class="form-control" @bind-Value="VinhoCadastro.Valor"></InputNumber>
                                 <ValidationMessage For="@(() => VinhoCadastro.Valor)"></ValidationMessage>
@@ -145,6 +157,7 @@
     Vinho VinhoCadastro;
     List<TipoUva> tiposUva;
     List<TipoVinho> tiposVinho;
+    List<Armonizacao> armonizacoes;
     List<Regiao> regioes;
     public byte[] ImageUploaded { get; set; }
 
@@ -159,6 +172,7 @@
         tiposUva = Service.GetTiposUva();
         tiposVinho = Service.GetTiposVinho();
         regioes = Service.GetRegioes();
+        armonizacoes = Service.GetArmonizacoes();
     }
 
     void FechaForm()
@@ -198,6 +212,10 @@
         {
             VinhoCadastro.IdRegiao = regioes[0].Id;
         }
+        if (armonizacoes.Count > 0)
+        {
+            VinhoCadastro.IdArmonizacao = armonizacoes[0].Id;
+        }
         Cadastrando = true;
     }
 
@@ -222,6 +240,14 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             VinhoCadastro.IdTipoUva = id;
+        }
+    }
+
+    void ArmonizacaoSelectChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            VinhoCadastro.IdArmonizacao = id;
         }
     }
 

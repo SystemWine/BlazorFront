@@ -11,7 +11,19 @@
             Filtros
         </a>
     </p>
-    <div class="collapse" id="filtros">
+    <div class="collapse" id="filtros">        
+        <div class="form-group">
+            <label for="">Armonização</label>
+            <select @onchange="ArmonizacaoChanged" class="form-control">
+                @foreach (var armo in listaArmonizacao)
+                {
+                    <option value="@armo.Id"
+                            selected="@(armo.Id == pesquisa.IdArmonizacao)">
+                        @armo.Descricao
+                    </option>
+                }
+            </select>
+        </div>
         <div class="form-group">
             <label for="">Tipo de vinho</label>
             <select @onchange="TipoVinhoChanged" class="form-control">
@@ -53,10 +65,10 @@
             <select @onchange="RegiaoChanged" class="form-control">
                 @foreach (var regiao in listaRegioes)
                 {
-                <option value="@regiao.Id"
-                        selected="@(regiao.Id == pesquisa.IdRegiao)">
-                    @NomeRegiao(regiao)
-                </option>
+                    <option value="@regiao.Id"
+                            selected="@(regiao.Id == pesquisa.IdRegiao)">
+                        @NomeRegiao(regiao)
+                    </option>
                 }
             </select>
         </div>
@@ -87,7 +99,7 @@
      * Sessão de váriaveis
      */
 
-    AtributosPesquisaVinho pesquisa = new AtributosPesquisaVinho() { Id = 0, IdTipoUva = 0, IdTipoVinho = 0, IdPais = 0, IdRegiao = 0 };
+    AtributosPesquisaVinho pesquisa = new AtributosPesquisaVinho() { Id = 0, IdTipoUva = 0, IdTipoVinho = 0, IdPais = 0, IdRegiao = 0, IdArmonizacao = 0 };
 
     List<Vinho> listaVinhos;
 
@@ -95,6 +107,7 @@
     List<TipoUva> listaTiposUva;
     List<Pais> listaPaises;
     List<Regiao> listaRegioes;
+    List<Armonizacao> listaArmonizacao;
 
     protected override void OnInitialized()
     {
@@ -117,6 +130,15 @@
         if (int.TryParse(e.Value.ToString(), out int id))
         {
             pesquisa.IdPais = id;
+            AtualizarListaVinhos();
+        }
+    }
+
+    void ArmonizacaoChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int id))
+        {
+            pesquisa.IdArmonizacao = id;
             AtualizarListaVinhos();
         }
     }
@@ -183,5 +205,11 @@
         todosPaises.Id = 0;
         todosPaises.Descricao = "(todos)";
         listaPaises.Insert(0, todosPaises);
+
+        listaArmonizacao = Service.GetArmonizacoes();
+        var todasArm = new Armonizacao();
+        todasArm.Id = 0;
+        todasArm.Descricao = "(todos)";
+        listaArmonizacao.Insert(0, todasArm);
     }
 }

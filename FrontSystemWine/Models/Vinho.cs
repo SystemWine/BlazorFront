@@ -29,6 +29,11 @@ namespace FrontSystemWine.Models
         [ForeignKey("IdTipoVinho")]
         public virtual TipoVinho TipoVinho { get; set; }
 
+        public int IdArmonizacao { get; set; }
+
+        [ForeignKey("IdArmonizacao")]
+        public virtual Armonizacao Armonizacao { get; set; }
+
         public byte[] Imagem { get; set; }
     }
 }
